@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <title>Intelligent Door Project - Physical Computing</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-cyborg-gaming.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+  </head>
+
+<body>
+
+  <!-- ***** Preloader Start ***** -->
+  <div id="js-preloader" class="js-preloader">
+    <div class="preloader-inner">
+      <span class="dot"></span>
+      <div class="dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+  <!-- ***** Preloader End ***** -->
+
+  <!-- ***** Header Area Start ***** -->
+  <header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="index.html" class="logo">
+                        <!-- <img src="assets/images/logo.png" alt=""> -->
+                        <h2>INTELLIGENT DOOR</h2>
+                    </a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="details.html">Details</a></li>
+                        <li><a href="source.html">Source Code</a></li>
+                    </ul>   
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                    <!-- ***** Menu End ***** -->
+                </nav>
+            </div>
+        </div>
+    </div>
+  </header>
+  <!-- ***** Header Area End ***** -->
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="page-content">
+
+          <!-- ***** Banner Start ***** -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="main-profile ">
+                <div class="row">
+                  <h3><em>Source Code</em> - Intelligent Door Project</h3>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="clips">
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <pre><code class="c">
+                            #include &lt;Servo.h&gt;
+
+                              Servo servo;
+                              const int servoPin = 3;
+                              const int rows = 4;
+                              const int cols = 4;
+                              char keys[rows][cols] = {
+                                {'1', '2', '3', 'A'},
+                                {'4', '5', '6', 'B'},
+                                {'7', '8', '9', 'C'},
+                                {'*', '0', '#', 'D'}
+                              };
+                              byte rowPins[rows] = {13, 12, 11, 10};
+                              byte colPins[cols] = {9, 8, 7, 6};
+                              
+                              // Ultrasonic sensor pin
+                              int triggerPin = 4;
+                              int echoPin = 5;
+                              
+                              // RGB LED pin
+                              int greenPin = 2;  // Green pin RGB LED
+                              
+                              char password[] = "12345";  // Correct password
+                              char enteredPassword[6] = "";
+                              bool buttonReleased = true;
+                              
+                              void setup() {
+                                servo.attach(servoPin);
+                                pinMode(triggerPin, OUTPUT);
+                                pinMode(echoPin, INPUT);
+                                pinMode(greenPin, OUTPUT);
+                                digitalWrite(greenPin, HIGH);
+                              
+                                for (int i = 0; i < rows; i++) {
+                                  pinMode(rowPins[i], OUTPUT);
+                                  digitalWrite(rowPins[i], HIGH);
+                                }
+                                for (int j = 0; j < cols; j++) {
+                                  pinMode(colPins[j], INPUT_PULLUP);
+                                }
+                              
+                                Serial.begin(9600);
+                                Serial.println("Enter the 5-digit password:");
+                              }
+                              
+                              void loop() {
+                                char key = getKey();
+                                if (key != 0 && buttonReleased) {
+                                  Serial.print(key);
+                                  enteredPassword[strlen(enteredPassword)] = key;
+                                  if (strlen(enteredPassword) == 5) {
+                                    if (strcmp(enteredPassword, password) == 0) {
+                                      Serial.println("\nAccess granted.");
+                                      openDoor();
+                                    } else {
+                                      Serial.println("\nIncorrect password.");
+                                    }
+                                    memset(enteredPassword, 0, sizeof(enteredPassword));
+                                  }
+                                  buttonReleased = false;
+                                } else if (key == 0) {
+                                  buttonReleased = true;
+                                }
+                              
+                                long duration, distance;
+                                digitalWrite(triggerPin, LOW);
+                                delayMicroseconds(2);
+                                digitalWrite(triggerPin, HIGH);
+                                delayMicroseconds(10);
+                                digitalWrite(triggerPin, LOW);
+                              
+                                duration = pulseIn(echoPin, HIGH);
+                                distance = (duration / 2) / 29.1;
+                              
+                                // Serial.print("Distance: ");
+                                // Serial.print(distance);
+                                // Serial.println(" cm");
+                              
+                                if (distance < 20) {
+                                  openDoor();
+                                }
+                              }
+                              
+                              char getKey() {
+                                for (int r = 0; r < rows; r++) {
+                                  digitalWrite(rowPins[r], LOW);
+                                  for (int c = 0; c < cols; c++) {
+                                    if (digitalRead(colPins[c]) == LOW) {
+                                      delay(50); // Debounce delay
+                                      return keys[r][c];
+                                    }
+                                  }
+                                  digitalWrite(rowPins[r], HIGH);
+                                }
+                                return 0;  // No key pressed
+                              }
+                              
+                              void openDoor() {
+                                int pos;
+                                digitalWrite(greenPin, LOW);
+                                for (pos = 0; pos <= 180; pos += 2) {
+                                  servo.write(pos);
+                                  delay(20);
+                                }
+                                delay(3000);
+                                digitalWrite(greenPin, HIGH);
+                                for (pos = 180; pos >= 0; pos -= 2) {
+                                  servo.write(pos);
+                                  delay(20);
+                                }
+                                delay(1000);
+                              }
+                          </code></pre>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+  <script src="assets/js/isotope.min.js"></script>
+  <script src="assets/js/owl-carousel.js"></script>
+  <script src="assets/js/tabs.js"></script>
+  <script src="assets/js/popup.js"></script>
+  <script src="assets/js/custom.js"></script>
+
+
+  </body>
+
+</html>

@@ -26,6 +26,7 @@ font & reset css
 --------------------------------------------- 
 */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900");
+@import url("https://fonts.googleapis.com/css2?family=Anuphan:wght@600");
 /* 
 ---------------------------------------------
 reset
@@ -773,7 +774,7 @@ Banner Style
 */
 
 .main-banner {
-  background-image: url(../images/banner-bg.jpg);
+  background-image: url(../images/banner5.jpg);
   background-position: center center;
   background-size: cover;
   min-height: 380px;
@@ -783,7 +784,7 @@ Banner Style
 
 .main-banner h6 {
   font-size: 20px;
-  color: #fff;
+  color: #27292a;
   font-weight: 400;
   margin-bottom: 25px;
 }
@@ -807,7 +808,7 @@ Most Popular Style
 
 .most-popular {
   margin-top: 60px;
-  padding: 30px;
+  /* padding: 30px; */
   background-color: #1f2122;
   border-radius: 23px;
 }
@@ -1309,10 +1310,27 @@ Game Details Style
 */
 
 .game-details h2 {
-  font-size: 45px;
-  text-transform: uppercase;
+  /* font-size: 45px; */
+  /* text-transform: uppercase; */
+  color: #ec6090;
+  font-family: 'Anuphan', sans-serif;
   text-align: center;
-  margin: 60px 0px;
+  margin: 100px 0px 10px;
+}
+
+.game-details .main-button {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.game-details em {
+  font-style: normal;
+  color: #ec6090
+}
+
+.game-details h5 {
+  font-family: 'Anuphan', sans-serif;
+  line-height: 1.6;
 }
 
 .game-details .content {
@@ -1534,6 +1552,11 @@ Profile Style
   background-color: #1f2122;
 }
 
+.main-profile em {
+  font-style: normal;
+  color: #ec6090
+}
+
 .main-profile .main-info span {
   font-size: 14px;
   color: #fff;
@@ -1585,6 +1608,13 @@ Profile Style
 .clips {
   margin-top: 30px;
   border-top: 2px solid #27292a;
+}
+
+.clips pre {
+  background-color: #1e1e1e;
+  color: #f8f8f2;
+  padding: 20px;
+  border-radius: 5px;
 }
 
 .clips .heading-section {
